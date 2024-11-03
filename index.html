@@ -3,66 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discount Generator</title>
+    <title>Discount Offer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .discount-btn {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .discount-btn:hover {
+            background-color: #45a049;
+        }
+        .form-container {
+            display: none;
+            margin-top: 20px;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px 0;
+            width: 80%;
+            max-width: 300px;
+        }
+        .submit-btn {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .submit-btn:hover {
+            background-color: #007bb5;
+        }
+        .social-icons {
+            margin-bottom: 20px;
+        }
+        .social-icons a img {
+            width: 60px;
+            margin: 0 10px;
+        }
+        .social-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 5px;
+            text-decoration: none;
+        }
+        .social-text:hover {
+            color: #007bb5;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Top Social Media Icons -->
-    <div style="text-align: center; margin-bottom: 20px;">
-        <a href="https://www.facebook.com/manjurulcreation" target="_blank">
-            <img src="https://www.iconfinder.com/data/icons/social-media-flat-7/64/Social-media_Facebook-512.png" alt="Facebook" width="40" style="margin-right: 10px;">
-        </a>
-        <a href="https://www.youtube.com/@manjurulcreation" target="_blank">
-            <img src="https://www.iconfinder.com/data/icons/social-media-flat-7/64/Social-media_Youtube-512.png" alt="YouTube" width="40">
-        </a>
+    <div class="social-icons">
+        <div>
+            <a href="https://www.facebook.com/manjurulcreation" target="_blank">
+                <img src="fb.jpg" alt="Facebook">
+            </a>
+            <a href="https://www.facebook.com/manjurulcreation" target="_blank" class="social-text">Manjurul Creation</a>
+        </div>
+        <div>
+            <a href="https://www.youtube.com/@manjurulcreation" target="_blank">
+                <img src="youtube.jpg" alt="YouTube">
+            </a>
+            <a href="https://www.youtube.com/@manjurulcreation" target="_blank" class="social-text">Manjurul Creation</a>
+        </div>
     </div>
 
-    <!-- Discount Button -->
-    <div style="text-align: center;">
-        <button id="discountButton" onclick="getDiscount()" style="font-size: 18px; padding: 10px 20px;">
-            Click to Get Discount
-        </button>
+    <h1>Click the Button to Reveal Your Discount!</h1>
+    <button class="discount-btn" onclick="revealDiscount()">Get Discount</button>
+
+    <div class="form-container" id="formContainer">
+        <h2>You won a <span id="discountAmount"></span>% discount!</h2>
+        <p>Please fill in your details below (optional):</p>
+        <input type="text" id="name" placeholder="Enter your name"><br>
+        <input type="text" id="phone" placeholder="Enter your WhatsApp number"><br>
+        <input type="email" id="email" placeholder="Enter your email"><br>
+        <button class="submit-btn" onclick="submitForm()">Submit</button>
     </div>
 
     <script>
         let clicked = false;
 
-        function getDiscount() {
+        function revealDiscount() {
             if (clicked) {
                 alert("You can only roll once!");
                 return;
             }
-
-            // Generate a random discount between 10% and 50%
-            const discount = Math.floor(Math.random() * (50 - 10 + 1)) + 10;
-            alert("Congratulations! You've got a " + discount + "% discount!");
-
-            // Get user input
-            const name = prompt("Enter your name (optional):");
-            const whatsappNumber = prompt("Enter your WhatsApp number (optional):");
-            const email = prompt("Enter your email (optional):");
-
-            // Prevent multiple clicks
             clicked = true;
 
-            // Prepare data to save as CSV
-            const data = [
-                ["Name", "WhatsApp Number", "Email", "Discount"],
-                [name || "N/A", whatsappNumber || "N/A", email || "N/A", discount + "%"]
-            ];
+            const discount = Math.floor(Math.random() * 41) + 10;
+            document.getElementById("discountAmount").textContent = discount;
+            document.getElementById("formContainer").style.display = "block";
+        }
 
-            // Convert data to CSV format
-            const csvContent = data.map(e => e.join(",")).join("\n");
-            const blob = new Blob([csvContent], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
+        function submitForm() {
+            const name = document.getElementById("name").value;
+            const phone = document.getElementById("phone").value;
+            const email = document.getElementById("email").value;
+            const discount = document.getElementById("discountAmount").textContent;
 
-            // Create a download link
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = "data.csv";
-            link.click();
-            URL.revokeObjectURL(url);
+            fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, phone, email, discount })
+            })
+            .then(response => response.text())
+            .then(message => alert(message))
+            .catch(error => console.error('Error:', error));
         }
     </script>
+
 </body>
 </html>
