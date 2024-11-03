@@ -18,32 +18,10 @@
             border: none;
             cursor: pointer;
             border-radius: 5px;
+            margin-top: 20px;
         }
         .discount-btn:hover {
             background-color: #45a049;
-        }
-        .form-container {
-            display: none;
-            margin-top: 20px;
-        }
-        input {
-            padding: 10px;
-            font-size: 16px;
-            margin: 10px 0;
-            width: 80%;
-            max-width: 300px;
-        }
-        .submit-btn {
-            padding: 10px 20px;
-            font-size: 18px;
-            background-color: #008CBA;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .submit-btn:hover {
-            background-color: #007bb5;
         }
         .social-icons {
             margin-bottom: 20px;
@@ -62,9 +40,53 @@
         .social-text:hover {
             color: #007bb5;
         }
+        .discount-message {
+            font-size: 24px;
+            margin-top: 20px;
+            display: none; /* Hidden by default */
+        }
+        .info-message {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .package-list {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        .package-item {
+            margin: 10px 0;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            display: inline-block;
+            width: 200px; /* Fixed width for uniformity */
+            transition: background-color 0.3s;
+        }
+        .package-item:hover {
+            background-color: #f0f0f0; /* Highlight on hover */
+        }
+        .basic { border-color: #4CAF50; } /* Basic package color */
+        .premium { border-color: #007bb5; } /* Premium package color */
+        .pro-max { border-color: #f39c12; } /* Pro Max package color */
     </style>
+    <!-- Include the html2canvas library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
 </head>
 <body>
+
+    <div class="info-message">
+        Please send the screenshot to <strong>01701018524</strong><br>
+        Package without discount:
+    </div>
+
+    <div class="package-list">
+        <div class="package-item basic">499 Basic</div>
+        <div class="package-item premium">750 Premium</div>
+        <div class="package-item pro-max">999 Pro Max</div>
+    </div>
 
     <div class="social-icons">
         <div>
@@ -84,13 +106,8 @@
     <h1>Click the Button to Reveal Your Discount!</h1>
     <button class="discount-btn" onclick="revealDiscount()">Get Discount</button>
 
-    <div class="form-container" id="formContainer">
-        <h2>You won a <span id="discountAmount"></span>% discount!</h2>
-        <p>Please fill in your details below (optional):</p>
-        <input type="text" id="name" placeholder="Enter your name"><br>
-        <input type="text" id="phone" placeholder="Enter your WhatsApp number"><br>
-        <input type="email" id="email" placeholder="Enter your email"><br>
-        <button class="submit-btn" onclick="submitForm()">Submit</button>
+    <div class="discount-message" id="discountMessage">
+        You won a <span id="discountAmount"></span>% discount!
     </div>
 
     <script>
@@ -103,27 +120,9 @@
             }
             clicked = true;
 
-            const discount = Math.floor(Math.random() * 41) + 10;
+            const discount = Math.floor(Math.random() * 41) + 10; // Generates a discount between 10% and 50%
             document.getElementById("discountAmount").textContent = discount;
-            document.getElementById("formContainer").style.display = "block";
-        }
-
-        function submitForm() {
-            const name = document.getElementById("name").value;
-            const phone = document.getElementById("phone").value;
-            const email = document.getElementById("email").value;
-            const discount = document.getElementById("discountAmount").textContent;
-
-            fetch('/submit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name, phone, email, discount })
-            })
-            .then(response => response.text())
-            .then(message => alert(message))
-            .catch(error => console.error('Error:', error));
+            document.getElementById("discountMessage").style.display = "block";
         }
     </script>
 
