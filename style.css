@@ -19,3 +19,12 @@ a{
 .fb{
     background-color: rgb(9, 9, 188);
 }
+
+div:hover{
+    background-color: black;
+}
+
+img {
+    border-radius: 50%;
+    height: 150px;
+}
